@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:dynamic_color/dynamic_color.dart';
 import 'package:passgen/setting.dart';
 import 'home.dart';
 import 'save.dart';
@@ -13,14 +14,40 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      debugShowCheckedModeBanner: false, // Remove debug banner
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true, // Enable Material 3
-      ),
-      home: const MyHomePage(),
+    return DynamicColorBuilder(
+      builder: (ColorScheme? lightDynamic, ColorScheme? darkDynamic) {
+        ColorScheme lightColorScheme;
+        ColorScheme darkColorScheme;
+
+        if (lightDynamic != null && darkDynamic != null) {
+          lightColorScheme = lightDynamic;
+          darkColorScheme = darkDynamic;
+        } else {
+          lightColorScheme = ColorScheme.fromSeed(
+            seedColor: Colors.deepPurple,
+            brightness: Brightness.light,
+          );
+          darkColorScheme = ColorScheme.fromSeed(
+            seedColor: Colors.deepPurple,
+            brightness: Brightness.dark,
+          );
+        }
+
+        return MaterialApp(
+          title: 'Flutter Demo',
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+            colorScheme: lightColorScheme,
+            useMaterial3: true,
+          ),
+          darkTheme: ThemeData(
+            colorScheme: darkColorScheme,
+            useMaterial3: true,
+          ),
+          themeMode: ThemeMode.system,
+          home: const MyHomePage(),
+        );
+      },
     );
   }
 }
@@ -54,17 +81,18 @@ class _MyHomePageState extends State<MyHomePage> {
       bottomNavigationBar: NavigationBar(
         selectedIndex: _selectedIndex,
         onDestinationSelected: _onItemTapped,
-        destinations: const [
+        destinations: [
           NavigationDestination(
-            icon: Icon(Icons.home),
+            icon: Icon(_selectedIndex == 0 ? Icons.home : Icons.home_outlined),
             label: 'Home',
           ),
           NavigationDestination(
-            icon: Icon(Icons.save),
+            icon: Icon(_selectedIndex == 1 ? Icons.save : Icons.save_outlined),
             label: 'Save',
           ),
           NavigationDestination(
-            icon: Icon(Icons.settings),
+            icon: Icon(
+                _selectedIndex == 2 ? Icons.settings : Icons.settings_outlined),
             label: 'Settings',
           ),
         ],
