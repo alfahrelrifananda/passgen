@@ -97,7 +97,7 @@ class _HomeTabState extends State<HomeTab> {
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: const Text('Save Password'),
+          title: const Text('Simpan Password'),
           content: TextField(
             controller: _passwordNameController,
             decoration: const InputDecoration(
